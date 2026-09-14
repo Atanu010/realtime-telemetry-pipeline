@@ -1,0 +1,208 @@
+{
+  "project_name": "StreamPulse - Real-Time Telemetry & Event Stream Processing Pipeline",
+  "theme": "Dark Operations Console (Tactical Monolithic Operator Interface)",
+  "emotional_archetype": "Tactical Precision & Command Center Focus (Performance Pro + Swiss High-Contrast)",
+  "design_principles": [
+    "Fusion over Imitation: Combine high-density Datadog/Grafana signal grids with Bloomberg Terminal typography, clean radar-style live motion indicators, and military-grade incident hierarchy.",
+    "Incident-First Ergonomics: Operational actions (Acknowledge, Resolve, Pause Stream, Resume Stream) are elevated with instant keybindings (e.g. Shift+P for pause, Esc to clear modal) and distinct non-ambiguous visual states.",
+    "Dense Data Scanning: Zero waste padding, sharp borders (1px tinted border), clear status badges with glow rings, clear tabular density with fixed key-value alignments.",
+    "Tactical Color System: Deep Void Obsidian `#090C10` and Carbon `#0D1117` background layers with Emerald `#10B981` (healthy), Electric Crimson `#EF4444` (critical alert), Amber Gold `#F59E0B` (warning/lagging), Cyan `#06B6D4` (processing/active), and Slate/Muted `#64748B` (paused/idle).",
+    "Living Feed Motion: Live telemetry ticks receive subtle micro-pulses (`animate-pulse-subtle`) and status changes use high-contrast outline flashes rather than distracting motion."
+  ],
+  "typography": {
+    "heading_font": "JetBrains Mono / IBM Plex Mono",
+    "body_font": "Geist Sans / Inter",
+    "code_font": "Geist Mono / IBM Plex Mono",
+    "text_sizes": {
+      "h1_console_title": "text-2xl sm:text-3xl font-mono tracking-tight font-bold text-slate-100",
+      "h2_section": "text-lg sm:text-xl font-mono tracking-tight font-semibold text-slate-200",
+      "h3_card_title": "text-sm sm:text-base font-mono font-medium text-slate-300",
+      "body_text": "text-xs sm:text-sm text-slate-300 font-sans leading-relaxed",
+      "table_data": "text-xs font-mono text-slate-200",
+      "badge_label": "text-[10px] font-mono uppercase tracking-widest font-semibold",
+      "metric_value": "text-2xl sm:text-3xl font-mono font-extrabold tracking-tight"
+    }
+  },
+  "colors": {
+    "background_primary": "#070A0F",
+    "background_surface": "#0D1117",
+    "background_card": "#161B22",
+    "border_subtle": "#21262D",
+    "border_active": "#30363D",
+    "text_primary": "#F0F6FC",
+    "text_secondary": "#8B949E",
+    "text_muted": "#484F58",
+    "status": {
+      "healthy": {
+        "text": "#34D399",
+        "bg": "rgba(16, 185, 129, 0.12)",
+        "border": "rgba(16, 185, 129, 0.3)"
+      },
+      "critical": {
+        "text": "#F87171",
+        "bg": "rgba(239, 68, 68, 0.15)",
+        "border": "rgba(239, 68, 68, 0.4)"
+      },
+      "warning": {
+        "text": "#FBBF24",
+        "bg": "rgba(245, 158, 11, 0.12)",
+        "border": "rgba(245, 158, 11, 0.3)"
+      },
+      "paused": {
+        "text": "#94A3B8",
+        "bg": "rgba(100, 116, 139, 0.15)",
+        "border": "rgba(100, 116, 139, 0.3)"
+      },
+      "processing": {
+        "text": "#38BDF8",
+        "bg": "rgba(14, 165, 233, 0.12)",
+        "border": "rgba(14, 165, 233, 0.3)"
+      }
+    }
+  },
+  "layout_architecture": {
+    "structure": "Fixed High-Density Operations Console Shell",
+    "top_bar": {
+      "height": "h-14",
+      "components": [
+        "Brand Logo & Pipeline Status Indicator (LIVE vs PAUSED indicator with pulse dot)",
+        "Global Stream Control Switch (Pause All Stream / Resume Stream with active status confirmation)",
+        "Cluster & Storage Connection Indicator (Kafka: connected, Redis: connected, TimescaleDB: connected)",
+        "Active Incident Ticker (Displays critical unhandled alerts count with click-to-triage trigger)",
+        "Auto-refresh interval dropdown (1s, 2s, 5s, Manual) + System Time Clock (UTC)"
+      ]
+    },
+    "navigation_tabs": [
+      {
+        "id": "overview",
+        "label": "01. PIPELINE OVERVIEW",
+        "icon": "Activity",
+        "description": "Stream throughput, latency, consumer lag, topological visual pipeline flow"
+      },
+      {
+        "id": "sources-consumers",
+        "label": "02. SOURCES & CONSUMERS",
+        "icon": "Layers",
+        "description": "Manage Kafka topics, Redis streams, Postgres CDC, consumer group scaling"
+      },
+      {
+        "id": "event-stream",
+        "label": "03. LIVE EVENT INSPECTOR",
+        "icon": "Terminal",
+        "description": "High-frequency streaming tail log, payload inspector, filter & search"
+      },
+      {
+        "id": "incidents-alerts",
+        "label": "04. INCIDENTS & ALERTS",
+        "icon": "AlertTriangle",
+        "description": "Active alert triage, acknowledge/resolve workflows, escalation history"
+      },
+      {
+        "id": "cluster-config",
+        "label": "05. CONNECTION & STORAGE CONFIG",
+        "icon": "Database",
+        "description": "Connection params for Kafka bootstrap, Redis URI, TimescaleDB pool settings"
+      }
+    ]
+  },
+  "views_and_flow": {
+    "primary_flow": "Overview → Sources/Consumers → Live Event Stream → Incident Acknowledge/Resolve → Stream Pause/Resume Safety Actions",
+    "views": {
+      "overview": {
+        "key_metrics": [
+          "Global Event Rate (events/sec with sparkline history)",
+          "p99 Latency (ms with baseline indicator)",
+          "Consumer Lag Count (unprocessed messages)",
+          "Buffer Pool & Memory Usage (%)"
+        ],
+        "sections": [
+          "Interactive Topological Stream Map (Source Nodes → Stream Queue → Processing Workers → Sink Storage)",
+          "Dual Telemetry Charts (Events/sec line chart + Latency percentile area chart)",
+          "Active Incidents Quick Banner (High priority items with instant ACK button)"
+        ]
+      },
+      "sources_consumers": {
+        "controls": [
+          "Add New Source / Consumer modal trigger",
+          "Search & Filter by protocol (Kafka, Redis, Postgres CDC, Webhook)",
+          "Batch Pause / Resume selected topics"
+        ],
+        "grid": "Dense table / card grid showing Topic/Stream Name, Protocol, Partition Count, Messages/sec, Lag, Health Status, Retention Period, Action Menu (Pause, Rebalance, Configure, Delete)"
+      },
+      "event_stream": {
+        "features": [
+          "Live Tail Mode toggle (Auto-scroll on/off)",
+          "Frequency Speed Control (Real-time 100ms, 500ms, 1s, Paused)",
+          "Filter by Level (INFO, WARN, ERROR, CRITICAL), Source, Partition Key",
+          "Search in Payload (regex or string filter)",
+          "Side-by-Side Payload Inspector (Formatted JSON view, Copy to clipboard, Highlight diffs, Replay event)"
+        ]
+      },
+      "incidents_alerts": {
+        "workflow": [
+          "Filter by Status (Active, Acknowledged, Resolved)",
+          "Filter by Severity (P1-Critical, P2-Major, P3-Minor)",
+          "Detailed Incident Card: Root cause hypothesis, affected pipeline stage, metrics context chart, Operator Audit Trail",
+          "Actions: 'Acknowledge Alert' (assigns operator + timestamp), 'Resolve Alert' (requires resolution note input), 'Trigger Pause Stream' (mitigation control)"
+        ]
+      },
+      "pause_resume_control": {
+        "modal_ux": "High-visibility warning banner, lists affected downstream consumers, requires explicit switch confirmation or typing 'CONFIRM PAUSE', shows real-time buffer hold timer"
+      }
+    }
+  },
+  "data_testing_guidelines": {
+    "data_testid_rules": "ALL interactive components, buttons, inputs, tabs, modal triggers, data table rows, and alert action buttons MUST include precise data-testid attributes.",
+    "required_test_ids": [
+      "data-testid=\"global-stream-status-badge\"",
+      "data-testid=\"stream-pause-resume-button\"",
+      "data-testid=\"nav-tab-overview\"",
+      "data-testid=\"nav-tab-sources-consumers\"",
+      "data-testid=\"nav-tab-event-stream\"",
+      "data-testid=\"nav-tab-incidents-alerts\"",
+      "data-testid=\"nav-tab-cluster-config\"",
+      "data-testid=\"metric-card-throughput\"",
+      "data-testid=\"metric-card-latency\"",
+      "data-testid=\"metric-card-consumer-lag\"",
+      "data-testid=\"metric-card-active-incidents\"",
+      "data-testid=\"add-source-button\"",
+      "data-testid=\"add-consumer-button\"",
+      "data-testid=\"source-consumer-table\"",
+      "data-testid=\"event-stream-live-toggle\"",
+      "data-testid=\"event-stream-search-input\"",
+      "data-testid=\"event-stream-level-filter\"",
+      "data-testid=\"event-stream-log-row-0\"",
+      "data-testid=\"event-payload-inspector\"",
+      "data-testid=\"alert-card-0\"",
+      "data-testid=\"acknowledge-alert-button-0\"",
+      "data-testid=\"resolve-alert-button-0\"",
+      "data-testid=\"incident-resolution-note-input\"",
+      "data-testid=\"pause-confirm-modal\"",
+      "data-testid=\"confirm-pause-submit-button\"",
+      "data-testid=\"connection-config-form\""
+    ]
+  },
+  "media": {
+    "image_urls": [
+      {
+        "category": "background_branding",
+        "url": "https://images.unsplash.com/photo-1762163516269-3c143e04175c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1MDZ8MHwxfHNlYXJjaHwzfHxzZXJ2ZXIlMjBkYXRhJTIwY2VudGVyJTIwdGVsZW1ldHJ5fGVufDB8fHx8MTc4OTM3MTIwN3ww&ixlib=rb-4.1.0&q=85",
+        "description": "Server rack with glowing status lights for operations terminal background header element"
+      },
+      {
+        "category": "infrastructure_nodes",
+        "url": "https://images.unsplash.com/photo-1506399309177-3b43e99fead2?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1MDZ8MHwxfHNlYXJjaHwyfHxzZXJ2ZXIlMjBkYXRhJTIwY2VudGVyJTIwdGVsZW1ldHJ5fGVufDB8fHx8MTc4OTM3MTIwN3ww&ixlib=rb-4.1.0&q=85",
+        "description": "High-density enterprise server racks for system hardware node detail card"
+      }
+    ]
+  },
+  "instructions_to_main_agent": [
+    "Build the dashboard using React + Tailwind CSS with Lucide icons and Recharts for dense telemetry visualization.",
+    "Implement full mock state and real-time interval updates (1-2 second ticks) for event throughput, latency, consumer lag, and live tail logs.",
+    "Support active user interaction for stream control: clicking 'Pause Stream' updates global status, shows a amber pause warning bar across top console, and stops auto-generating log feed until 'Resume Stream' is clicked.",
+    "Ensure incident acknowledgment immediately changes badge state to 'ACKNOWLEDGED' with timestamp and operator name, and resolving an alert opens a dialog for resolution notes before removing it or placing it in 'RESOLVED' history.",
+    "Provide clear configuration management where connection parameters (Kafka bootstrap servers, Redis host, Timescale DB string) can be configured, tested, and saved.",
+    "Maintain strict data-testid attributes on all interactive controls for automated testing validation.",
+    "Use strict dark mode with dark borders (#21262D), glass opacity dropdowns/modals (bg-slate-900/90 backdrop-blur-md), monospace numeric data formatting, and zero unstyled native UI elements."
+  ]
+}
