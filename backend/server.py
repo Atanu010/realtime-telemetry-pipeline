@@ -78,8 +78,10 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Include the router last so every endpoint remains under /api.
-app.include_router(api_router)
 @api_router.get("/health")
 async def health():
     return {"status": "ok"}
+
+# Include the router last so every endpoint remains under /api.
+app.include_router(api_router)
 
