@@ -27,6 +27,8 @@ services:
 
     publishDir: dist
 
+    pullRequestPreviewsEnabled: false
+
     routes:
       - type: rewrite
         source: /*
