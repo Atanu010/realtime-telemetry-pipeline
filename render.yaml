@@ -1,0 +1,41 @@
+services:
+  - type: web
+    name: realtime-telemetry-api
+    runtime: python
+    rootDir: backend
+
+    buildCommand: |
+      pip install -r requirements.txt
+
+    startCommand: |
+      uvicorn server:app --host 0.0.0.0 --port $PORT
+
+    envVars:
+      - key: MONGO_URL
+        sync: false
+
+      - key: DB_NAME
+        value: telemetry
+
+      - key: CORS_ORIGINS
+        sync: false
+
+  - type: static
+    name: realtime-telemetry-ui
+
+    rootDir: frontend
+
+    buildCommand: |
+      npm install
+      npm run build
+
+    publishDir: dist
+
+    envVars:
+      - key: VITE_API_URL
+        sync: false
+
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
