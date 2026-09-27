@@ -1,6 +1,6 @@
 import asyncio
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, Depends
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 import os
@@ -10,58 +10,35 @@ from pydantic import BaseModel, Field
 from typing import List
 import uuid
 from datetime import datetime
-from routers.telemetry import router as telemetry_router
-
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-# MongoDB connection
+# MongoDB connection & fallback
 from lib.db import client, db, ensure_indexes
+from routers.auth import router as auth_router, verify_operator
+from routers.telemetry import router as telemetry_router
 
-
-# Startup runs before the yield, shutdown after it. Add your own setup/teardown here.
+# Startup runs before the yield, shutdown after it.
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    app.state.index_task = asyncio.create_task(ensure_indexes())  # background: a big index build must not block boot
+    app.state.index_task = asyncio.create_task(ensure_indexes())
     yield
     client.close()
 
-
 # Create the main app without a prefix
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(title="StreamPulse Telemetry Pipeline", lifespan=lifespan)
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
-api_router.include_router(telemetry_router)
 
+# Auth router (open for login & verification)
+api_router.include_router(auth_router)
 
-# Define Models
-class StatusCheck(BaseModel):
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    client_name: str
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
+# Telemetry router (strictly protected: operator authentication required)
+api_router.include_router(telemetry_router, dependencies=[Depends(verify_operator)])
 
-class StatusCheckCreate(BaseModel):
-    client_name: str
-
-# Add your routes to the router instead of directly to app
-@api_router.get("/")
-async def root():
-    return {"message": "Hello World"}
-
-@api_router.post("/status", response_model=StatusCheck)
-async def create_status_check(input: StatusCheckCreate):
-    status_dict = input.model_dump()
-    status_obj = StatusCheck(**status_dict)
-    _ = await db.status_checks.insert_one(status_obj.model_dump())
-    return status_obj
-
-@api_router.get("/status", response_model=List[StatusCheck])
-async def get_status_checks():
-    status_checks = await db.status_checks.find().to_list(1000)
-    return [StatusCheck(**status_check) for status_check in status_checks]
-
+# Configure CORS
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
@@ -77,11 +54,27 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Include the router last so every endpoint remains under /api.
+# Public health check
 @api_router.get("/health")
 async def health():
-    return {"status": "ok"}
+    return {"status": "ok", "service": "realtime-telemetry-pipeline"}
 
-# Include the router last so every endpoint remains under /api.
+# Include the router so every endpoint remains under /api
 app.include_router(api_router)
 
+# Mount frontend static distribution when built
+dist_dir = Path(__file__).parent.parent / "frontend" / "dist"
+if dist_dir.exists():
+    from fastapi.staticfiles import StaticFiles
+    from fastapi.responses import FileResponse
+    if (dist_dir / "assets").exists():
+        app.mount("/assets", StaticFiles(directory=dist_dir / "assets"), name="assets")
+
+    @app.get("/{full_path:path}")
+    async def serve_spa(full_path: str):
+        if full_path.startswith("api/"):
+            return {"detail": "Not found"}
+        target = dist_dir / full_path
+        if target.is_file():
+            return FileResponse(target)
+        return FileResponse(dist_dir / "index.html")

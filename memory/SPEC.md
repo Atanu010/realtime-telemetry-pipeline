@@ -19,7 +19,7 @@ StreamPulse is a dark operations console for a generic real-time telemetry and e
 6. Save connector profiles under Connection & Storage Config and request a one-shot connection test.
 
 ## Auth
-No authentication or role gating is implemented. The console is an operator demo.
+Operator authentication and access gating is implemented. The operations console requires an authorized operator key (`OPERATOR_KEY`) to access metrics, manage resources, and perform mutations.
 
 ## Integrations
 The pod has no user-provided external credentials. Kafka, Redis, and TimescaleDB cards are configured with redacted placeholder endpoints. Connection test responses are **MOCKED** and explicitly report that external credentials are not active. The telemetry feed and metrics are **MOCKED** demo data; no live Kafka consumer or TimescaleDB writer starts until real credentials and adapters are supplied.

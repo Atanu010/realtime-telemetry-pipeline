@@ -3,32 +3,30 @@ services:
     name: realtime-telemetry-api
     runtime: python
     rootDir: backend
-
     buildCommand: pip install -r requirements.txt
-
     startCommand: uvicorn server:app --host 0.0.0.0 --port $PORT
-
     envVars:
       - key: MONGO_URL
         sync: false
-
       - key: DB_NAME
         value: telemetry
-
       - key: CORS_ORIGINS
-        sync: false
+        value: "*"
+      - key: OPERATOR_KEY
+        value: atanu-telemetry-2026
 
   - type: static
     name: realtime-telemetry-ui
-
     rootDir: frontend
-
     buildCommand: npm install && npm run build
-
     publishDir: dist
-
     pullRequestPreviewsEnabled: false
-
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: realtime-telemetry-api
+          property: host
     routes:
       - type: rewrite
         source: /*
