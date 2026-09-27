@@ -1,6 +1,6 @@
 import asyncio
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, APIRouter, Depends
+from fastapi import FastAPI, APIRouter
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 import os
@@ -16,7 +16,7 @@ load_dotenv(ROOT_DIR / '.env')
 
 # MongoDB connection & fallback
 from lib.db import client, db, ensure_indexes
-from routers.auth import router as auth_router, verify_operator
+from routers.auth import router as auth_router
 from routers.telemetry import router as telemetry_router
 
 # Startup runs before the yield, shutdown after it.
@@ -35,8 +35,8 @@ api_router = APIRouter(prefix="/api")
 # Auth router (open for login & verification)
 api_router.include_router(auth_router)
 
-# Telemetry router (strictly protected: operator authentication required)
-api_router.include_router(telemetry_router, dependencies=[Depends(verify_operator)])
+# Telemetry router (open access)
+api_router.include_router(telemetry_router)
 
 # Configure CORS
 app.add_middleware(
