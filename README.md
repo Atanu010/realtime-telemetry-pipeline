@@ -2,8 +2,6 @@
 
 StreamPulse is a modern, high-performance telemetry and event-processing operations platform. It provides real-time pipeline monitoring, source/consumer lifecycle management, live event streaming, incident triage, and connection topology configuration.
 
-![StreamPulse Console](https://raw.githubusercontent.com/Atanu010/realtime-telemetry-pipeline/main/frontend/public/favicon.svg)
-
 ## Features
 
 - **Pipeline Overview**: Live throughput (events/sec), P99 latency tracking, consumer lag, and buffer metrics.
